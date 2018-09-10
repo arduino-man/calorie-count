@@ -13,12 +13,10 @@ pefile==2018.8.8
 pipreqs==0.4.9
 PyInstaller==3.3.1
 pyparsing==2.2.0
-pypiwin32==223
 PyQt5==5.9
 PyQt5-sip==4.19.12
 python-dateutil==2.7.3
 pytz==2018.5
-pywin32==223
 requests==2.19.1
 sip==4.19.8
 six==1.11.0
