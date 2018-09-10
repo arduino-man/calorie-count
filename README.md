@@ -1,4 +1,4 @@
-# calorie-count
+# Calorie-count
 A GPL calorie counter that is multi-platform and doesn't depend on Java
 
 1.- Clone this repo.  
