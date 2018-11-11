@@ -35,8 +35,6 @@ class MainCalorieWindow(Ui_MainWindow):
         except:
             return
             
-            
-        print("%s, %s" % (self.tot_cals, self.totalCals))
         if self.sliderValue < self.tot_cals:
             self.label_7.show()
         else:
@@ -193,8 +191,7 @@ class MainCalorieWindow(Ui_MainWindow):
         # Create database connection object   
         self.connection = sqlite3.connect('sqlite3.db', detect_types=sqlite3.PARSE_DECLTYPES)
         self.connection.row_factory = sqlite3.Row
-        self.cur = self.connection
-        self.checkTableExists(self.cur, "entries")
+        self.cursor = self.connection.cursor()
         
     def deleteEntries(self):
         allRows = self.tableWidget.selectionModel().selectedRows()
@@ -202,7 +199,7 @@ class MainCalorieWindow(Ui_MainWindow):
         
         if self.showDeleteMsgBox(rowCount):
             for row in allRows:
-				# This row.data shit only works because the QModelIndex for each row happens to point to the column 0
+	 			# This row.data shit only works because the QModelIndex for each row happens to point to the column 0
                 dbItemIndex = row.data()
                 #print(dbItemIndex)
                 self.connection.execute("DELETE FROM entries WHERE ID = ?;", (dbItemIndex,))
@@ -211,29 +208,11 @@ class MainCalorieWindow(Ui_MainWindow):
 		
 		# Update table widget
         self.theDate = self.calendarWidget.selectedDate()
-        self.get_rows_by_date(self.theDate.toPyDate())    
+        self.get_rows_by_date(self.theDate.toPyDate())
         
-    def checkTableExists(self, dbcon, tablename):
-        dbcur = dbcon.cursor()
-        dbcur.execute("""
-            SELECT COUNT(*)
-            FROM sqlite_master
-            WHERE type = 'table' AND name = 'entries'
-            """)
-        if dbcur.fetchone()[0] == 1:
-            dbcur.close()
-            print("Table exists")
-            return True
-        else:
-            dbcur.execute("""
-            CREATE TABLE entries 
-            (id integer primary key, 
-            food_name text, calories integer, 
-            datetime timestamp)
-            """)
-        print("Table created")
-        dbcur.close()
-        return False
+    def checkTableExists(self):
+        self.cur = self.connection.cursor()
+        self.result = self.cur.execute("create table if not exists entries (id integer primary key, food_name text, calories integer, datetime timestamp)")
     
 		
 if __name__ == "__main__":
@@ -241,5 +220,6 @@ if __name__ == "__main__":
     mainCalorieWindow = MainCalorieWindow()
     mainCalorieWindow.setFixedSize(mainCalorieWindow.size())
     mainCalorieWindow.connectToDB()
+    mainCalorieWindow.checkTableExists()
     mainCalorieWindow.show()
     sys.exit(app.exec_())
