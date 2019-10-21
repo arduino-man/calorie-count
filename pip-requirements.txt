@@ -20,5 +20,5 @@ pytz==2018.5
 requests>=2.20.0
 sip==4.19.8
 six==1.11.0
-urllib3==1.23
+urllib3==1.24.2
 yarg==0.1.9
